@@ -1,0 +1,78 @@
+{
+   "name": "rates",
+   "i18n": {
+       "en-US": {
+           "label": "rates",
+           "description": "Set up and manage rates for your customers and suppliers.",
+           "extended_description": "You can setup and manage your rates per web.",
+           "features": [ "rateentry per web manage", "create new rates per csv upload" ]
+       },
+       "ro-RO": {
+        "label": "rates",
+        "description": "App rates vă permite să personalizați apelurile de rutare pe aplicație web.",
+        "extended_description": "Care vă permite să se aplice în mod eficient propria rates și să facă acest produs propriu. (de exemplu, cere numărul de client pentru a direcționa le individual sau autentificare cu baza de date)",
+        "features": [
+            "Edit rates",
+            "edit apps"
+            ]
+        },
+       "ru-RU": {
+           "label": "ставки",
+           "description": "Устанавливайте и управляйте тарифами для ваших клиентов и поставщиков.",
+           "extended_description": "Вы можете настраивать и управлять своими ставками в Интернете.",
+           "features": [ "rateentry per web manage ", "создать новые ставки на загрузку CSV" ]
+       },
+       "nl-NL": {
+        "label": "rates",
+        "description": "De spil app kunt u routing oproepen per webapplicatie aan te passen.",
+        "extended_description": "Die u toelaat om effectief toe te passen uw eigen spil en maken dit product uw eigen. (bv vraag klantnummer om de route ze individueel of verificatie met uw database)",
+        "features": [
+            "Edit Spil",
+            "edit apps"
+            ]
+        },
+       "de-DE": {
+           "label": "Verbindungstarife",
+           "description": "Einrichten und verwalten Ihrer Verbindungstarife für Ihre Kunden und Liefereranten.",
+           "extended_description": "Sie können die Verbindungstarife einpflegen und verändern.",
+           "features": [ "Einzelne Tarife erstellen und anpassen", "Neue Tarife upload per csv" ]
+       },
+       "it-IT": {
+        "label": "rates",
+        "description": "L'applicazione del perno consente di personalizzare le chiamate di routing per ogni applicazione web.",
+        "extended_description": "Ciò consente di applicare in modo efficace il proprio perno e rendono questo prodotto il proprio. (ad esempio, chiedere il numero cliente di rotta singolarmente o l'autenticazione con il database)",
+        "features": [
+            "Edit Perno",
+            "edit apps"
+            ]
+        },
+       "fr-FR": {
+           "label": "les taux",
+           "description": "Mettre en place et gérer les tarifs de vos clients et fournisseurs.",
+           "extended_description": "Vous pouvez configurer et gérer vos tarifs par web.",
+           "features": [ "rateentry per web manage ", "créer de nouveaux tarifs par téléchargement CSV" ]
+       },
+       "es-ES": {
+        "label": "rates",
+        "description": "La aplicación de rates le permite personalizar las llamadas de enrutamiento por aplicación web.",
+        "extended_description": "Eso le permite aplicar de manera efectiva su propio rates y hacen de este producto el suyo propio. (por ejemplo, pedir el número de cliente para enrutar de forma individual o autenticación con su base de datos)",
+        "features": [
+            "Edit rates",
+            "edit apps"
+        ]
+    }
+   },
+   "tags": [ "carrier", "reseller", "all" ],
+   "api_url": "http://kazoo.allip.ovh:8000/v2",
+   "author": "2600Hz",
+   "version": "1.0",
+   "license": "-",
+   "price": 0,
+   "icon": "Rates_app.png",
+   "screenshots": [ "rates_1.png", "rates_2.png" ],
+   "urls": {
+		"documentation": "{documentation_url}",
+		"howto": "{howto_video_url}"
+   },
+   "pvt_type": "app"
+}
