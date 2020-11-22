@@ -12,4 +12,4 @@ Requires [Monster UI v.4.3](https://github.com/2600hz/monster-ui)
 # The Kazoo user should be able to read files from callcenter app directory
 sup crossbar_maintenance init_app /var/www/html/monster-ui/apps/rates https://site.com:8000/v2/
 ```
-4. Activate Callcenter app in the Monster UI App Store ( `/#/apps/appstore` )
+3. Activate Callcenter app in the Monster UI App Store ( `/#/apps/appstore` )
