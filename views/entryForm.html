@@ -1,0 +1,136 @@
+<form id="addressbook-entry-form" class="form-horizontal addressbook-entry-form">
+	<div class="control-group">
+		<label class="control-label" for="entry-ratename">
+			{{ i18n.rates.entryForm.ratenameLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.rate_name }}"
+				name="rate_name" id="entry-ratename"/>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="entry-isocode">
+			{{ i18n.rates.entryForm.isocodeLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.iso_country_code }}"
+				name="iso_country_code" id="entry-isocode"/>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="entry-description">
+			{{ i18n.rates.entryForm.descriptionLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.description }}"
+				name="description" id="entry-description"/>
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-prefix">
+			{{ i18n.rates.entryForm.prefixLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.prefix }}"
+				name="prefix" id="entry-prefix" />
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-ratecost">
+			{{ i18n.rates.entryForm.ratecostLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.rate_cost }}"
+				name="rate_cost" id="entry-ratecost" />
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-internalratecost">
+			{{ i18n.rates.entryForm.internalratecostLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" value="{{ entryData.internal_rate_cost }}"
+				   name="internal_rate_cost" id="entry-internalratecost" />
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-rateincrement">
+			{{ i18n.rates.entryForm.rateincrementLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.rate_increment }}"
+				name="rate_increment" id="entry-rateincrement" />
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-rateminimum">
+			{{ i18n.rates.entryForm.rateminimumLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" maxlength="128" value="{{ entryData.rate_minimum }}"
+				name="rate_minimum" id="entry-rateminimum" />
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="entry-direction">
+			{{ i18n.rates.entryForm.directionLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" minlength="1" maxlength="128" value="{{ entryData.direction }}"
+				name="direction" id="entry-direction" />
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-weight">
+			{{ i18n.rates.entryForm.weightLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" minlength="1" maxlength="128" value="{{ entryData.weight }}"
+				name="weight" id="entry-weight" />
+		</div>
+	</div>
+
+	<div class="control-group js-entry-number-box">
+		<label class="control-label" for="entry-ratesurcharge">
+			{{ i18n.rates.entryForm.ratesurchargeLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" minlength="1" maxlength="128" value="{{ entryData.rate_surcharge }}"
+				name="rate_surcharge" id="entry-ratesurcharge" />
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="entry-routes">
+			{{ i18n.rates.entryForm.routesLabel }}
+		</label>
+		<div class="controls">
+			<input class="js-to-serialize" type="text" value="{{ entryData.routes }}"
+				   name="routes" id="entry-routes" />
+		</div>
+	</div>
+
+	<div class="buttons-wrapper">
+		{{#if entryData.id}}
+			<button class="btn btn-primary js-save-entry" data-entry-id="{{ entryData.id }}" data-list-id="{{ id }}">
+				{{ i18n.rates.entryForm.saveBtnText }}
+			</button>
+			<button class="btn js-cancel">
+				{{ i18n.rates.entryForm.cancelBtnText }}
+			</button>
+		{{else}}
+			<button class="btn btn-primary js-save-entry" data-entry-id="{{ entryData.id }}" data-list-id="{{ id }}">
+				{{ i18n.rates.entryForm.saveBtnText }}
+			</button>
+		{{/if}}
+	</div>
+</form>
