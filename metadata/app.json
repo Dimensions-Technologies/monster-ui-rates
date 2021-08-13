@@ -11,7 +11,7 @@
 	"tags": ["reseller"],
 	"icon": "Rates_app.png",
 	"api_url": "http://10.26.0.41:8000/v2",
-	"author": "Vladimir Barkasov, sponsored by Raffel Internet B.V.",
+	"author": "Emmanuel Balogun",
 	"version": "1.0",
 	"license": "MPL2",
 	"price": 0,

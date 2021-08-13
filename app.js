@@ -44,13 +44,13 @@ define(function(require){
 		},
 
 		vars: {
-			entryDataTable: null,
-			defaultAddressbookName: 'default_addressbook'
+			entryDataTable: null
 		},
 
 		validationRules: {
 			'entryForm': {
 				'rate_name': {
+					required: true,
 					minlength: 1,
 					maxlength: 128
 				},
@@ -59,7 +59,17 @@ define(function(require){
 					minlength: 1,
 					maxlength: 128
 				},
+				'iso_country_code': {
+					required: true,
+					minlength: 1,
+					maxlength: 3
+				},
 				'rate_cost': {
+					required: true,
+					minlength: 1,
+					maxlength: 128
+				},
+				'direction': {
 					required: true,
 					minlength: 1,
 					maxlength: 128
@@ -153,56 +163,11 @@ define(function(require){
 			var html = $(monster.template(self, 'main', {}));
 			$container.empty().append(html);
 
-			self.getLists(function(addressBooksList) {
-				self.renderListItemForm(addressBooksList);
-				//self.renderSidebarMenu(addressBooksList);
-				self.initDefaultListBehavior(addressBooksList);
+			self.getLists(function(ratesList) {
+				self.renderListItemForm(ratesList);
 			});
 
 			self.mainContainerBindEvents($container);
-		},
-
-		initDefaultListBehavior: function(addressBooksList) {
-			var self = this;
-			var config = monster.config;
-
-			var isSetDefaultName = function() {
-				return config.addressbooksapp.hasOwnProperty('default_addressbook_name')
-					&& !!config.addressbooksapp['default_addressbook_name']
-			};
-
-			var shouldBeCreatedDefaultList = function() {
-				return config.addressbooksapp
-				&& config.addressbooksapp.hasOwnProperty('create_default_addressbook')
-			};
-
-			var isExistDefaultList = function(defaultListName){
-				for(var i=0, len=addressBooksList.length; i<len; i++) {
-					if(addressBooksList[i].name === defaultListName) {
-						return true;
-					}
-				}
-				return false;
-			};
-
-			if(shouldBeCreatedDefaultList()) {
-				if(isSetDefaultName()) {
-					self.vars.defaultAddressbookName = config.addressbooksapp['default_addressbook_name'];
-				}
-
-				if(!isExistDefaultList(self.vars.defaultAddressbookName)) {
-					self.createList({
-						name: self.vars.defaultAddressbookName
-					}, function(defaultListData){
-						self.getLists(function(lists) {
-							//self.renderListItemForm(addressBooksList);
-							//self.renderSidebarMenu(lists, defaultListData.id);
-							self.renderListItemForm(defaultListData.id);
-							toastr.success(self.i18n.active().addressbooks.defaultListCreatedSuccessMessage);
-						});
-					});
-				}
-			}
 		},
 
 		mainContainerBindEvents: function ($container) {
@@ -212,7 +177,7 @@ define(function(require){
 				e.preventDefault();
 
 				self.renderListItemForm(null, function() {
-					var $menuListContainer = $('#addressbooks-list');
+					var $menuListContainer = $('#rates-list');
 					$menuListContainer.find('li.active').removeClass('active');
 					$menuListContainer.find('.js-new-list-item').remove();
 					$menuListContainer.prepend('<li class="js-new-list-item active"><a>' +
@@ -319,24 +284,6 @@ define(function(require){
 			});
 		},
 
-		createList: function(data, callback){
-			var self = this;
-
-			monster.request({
-				resource: 'rates.create',
-				data: {
-					accountId: self.accountId,
-					generateError: false,
-					data: data
-				},
-				success: function (data) {
-					if(typeof(callback) === 'function') {
-						callback(data.data);
-					}
-				}
-			});
-		},
-
 		createEntry: function(listId, data, callback){
 			var self = this;
 
@@ -351,6 +298,11 @@ define(function(require){
 					if(typeof(callback) === 'function') {
 						callback(data.data);
 					}
+				},
+				error: function (data) {
+					if(typeof(callback) === 'function') {
+						callback(data.data);
+					}
 				}
 			});
 		},
@@ -359,10 +311,9 @@ define(function(require){
 		createEntries: function(entriesList, listId, callback) {
 			var self = this,
 				requests = {};
-			console.log(entriesList);
+			
 			entriesList.forEach(function(val, i){
 				requests['entry' + i] = (function(entryData){
-					console.log(entryData);
 					return function(callback){
 						monster.request({
 							resource: 'rates.create',
@@ -389,28 +340,9 @@ define(function(require){
 			});
 		},
 
-		updateList: function(listId, data, callback){
-			var self = this;
-
-			monster.request({
-				resource: 'addressbooks.list.updateWithRewrite',
-				data: {
-					accountId: self.accountId,
-					listId: listId,
-					generateError: false,
-					data: data
-				},
-				success: function (data) {
-					if(typeof(callback) === 'function') {
-						callback(data.data);
-					}
-				}
-			});
-		},
-
 		updateEntry: function(entryId, listId, data, callback){
 			var self = this;
-
+			
 			monster.request({
 				resource: 'rates.update',
 				data: {
@@ -427,179 +359,27 @@ define(function(require){
 			});
 		},
 
-		renderSidebarMenu: function(addressBooksList, selectedId){
-			var self = this;
-
-			var $addressBooksListBox = $('#addressbooks-list-container');
-
-			addressBooksList.sort(function(a, b) {
-				return a.name.toLowerCase() < b.name.toLowerCase() ? -1 : 1;
-			});
-
-			var html = $(monster.template(self, 'menuList', {
-				activeId: selectedId || '',
-				addressBooks: addressBooksList
-			}));
-
-			$addressBooksListBox.empty().append(html);
-
-			$addressBooksListBox.find('.js-select-list').not('.handled').on('click', function(e) {
-				e.preventDefault();
-				var $this = $(this);
-				var id = $this.parent().data('id');
-
-				self.renderListItemForm(id, function() {
-					$('#addressbooks-list').find('li.active').removeClass('active');
-					$this.parent().addClass('active');
-				});
-			}).addClass('handled');
-		},
-
 		renderListItemForm: function(listId, callback) {
 			var self = this;
-			var $container = $('#addressbooks-content');
-
-			var isDefaultAddressBook = function(listName) {
-				var config = monster.config;
-				var defaultAddressBookName = self.vars.defaultAddressbookName;
-
-				if(config.addressbooksapp
-					&& config.addressbooksapp.hasOwnProperty('create_default_addressbook')
-					&& config.addressbooksapp['create_default_addressbook']) {
-
-					if(config.addressbooksapp.hasOwnProperty('default_addressbook_name')
-						&& !!config.addressbooksapp['default_addressbook_name']) {
-						defaultAddressBookName = config.addressbooksapp['default_addressbook_name'];
-					}
-					return (defaultAddressBookName === listName);
-				}
-
-				return false;
-			};
-
+			var $container = $('#rates-content');
 
 			if(listId) {
 				self.getListItem(listId, function(listItemData) {
 					var html = $(monster.template(self, 'listItemContent', {
-						data: listItemData,
-						isDefaultAddressBook: isDefaultAddressBook(listItemData.name)
+						isDefaultAddressBook: false
 					}));
 					$container.empty().append(html);
 
 					self.getEntriesOfList(listId, function(entriesList) {
-						console.log('Entries:');
-						console.log(entriesList);
 
 						self.entriesTableRender(entriesList, listId);
-						self.listItemFormBindEvents($container);
 
 						if(typeof(callback) === 'function') {
 							callback(listItemData, entriesList);
 						}
 					});
 				})
-			} else {
-				var html = $(monster.template(self, 'listItemContent', {
-					data: {
-						isDefaultAddressBook: false
-					}
-				}));
-				$container.empty().append(html);
-				self.listItemFormBindEvents($container);
-				if(typeof(callback) === 'function') {
-					callback();
-				}
 			}
-		},
-
-		listItemFormBindEvents: function($container) {
-			var self = this;
-
-			$('#addressbook-list-form').find('.js-to-serialize').not('.handled').on('change paste keyup', function(){
-				$('#addressbook-list-form').find('.js-save-list').show();
-			}).addClass('handled');
-
-			$container.find('.js-create-list').not('handled').on('click', function(e) {
-				e.preventDefault();
-
-				var $listForm = $('#addressbook-list-form');
-
-				self.validationRules.listForm.name.notEqual = self.vars.defaultAddressbookName;
-				monster.ui.validate($listForm, {
-					rules: self.validationRules.listForm
-				});
-
-				if(!monster.ui.valid($listForm)) {
-					return;
-				}
-
-				var formData = self.getFormData($listForm);
-
-				self.createList(formData, function(listData) {
-					self.getLists(function(lists) {
-						//self.renderSidebarMenu(lists, listData.id);
-						self.renderListItemForm(listData.id);
-						toastr.success(self.i18n.active().rates.listCreatedSuccessMessage);
-					});
-				});
-			}).addClass('handled');
-
-			$container.find('.js-save-list').not('handled').on('click', function(e) {
-				e.preventDefault();
-
-				var listId = $(this).data('list-id');
-
-				var $listForm = $('#addressbook-list-form');
-				monster.ui.validate($listForm, {
-					rules: self.validationRules.listForm
-				});
-
-				if(!monster.ui.valid($listForm)) {
-					return;
-				}
-
-				var formData = self.getFormData($listForm);
-
-				self.updateList(listId, formData, function(listData) {
-					self.getLists(function(lists) {
-						//self.renderSidebarMenu(lists, listData.id);
-						self.renderListItemForm(listData.id);
-						toastr.success(self.i18n.active().rates.listUpdatedSuccessMessage);
-					});
-				});
-			}).addClass('handled');
-
-			$container.find('.js-cancel-creating-list').not('handled').on('click', function(e) {
-				e.preventDefault();
-				$('#addressbooks-list').find('.js-new-list-item').remove();
-				$('#addressbooks-content').empty().html('<h2>' + self.i18n.active().rates.mainContentIntroMessage + '</h2>');
-			}).addClass('handled');
-
-			$container.find('.js-delete-list').not('handled').on('click', function(e) {
-				e.preventDefault();
-				var listId = $(this).data('list-id');
-
-				monster.ui.confirm(self.i18n.active().rates.deleteListConfirmText, function() {
-					self.deleteList(listId, function(data) {
-						var i18n = self.i18n.active();
-						$('#addressbooks-list').find('li[data-id="' + listId + '"]').remove();
-						$('#addressbooks-content').empty().html('<h2>' + i18n.rates.mainContentIntroMessage + '</h2>');
-					})
-				});
-			}).addClass('handled');
-
-			$container.find('.js-delete-all-entries').not('handled').on('click', function(e) {
-				e.preventDefault();
-				var listId = $(this).data('list-id');
-
-				monster.ui.confirm(self.i18n.active().rates.deleteAllEntriesConfirmText, function() {
-					self.deleteAllEntries(listId, function(data) {
-						var i18n = self.i18n.active();
-						self.entriesTableRender([], listId);
-						toastr.success(self.i18n.active().rates.allEntriesWereDeletedSuccessMessage);
-					});
-				});
-			}).addClass('handled');
 		},
 
 		getFormData: function($formEl, selector) {
@@ -630,24 +410,6 @@ define(function(require){
 			});
 
 			return result;
-		},
-
-		deleteList: function(listId, callback) {
-			var self = this;
-
-			monster.request({
-				resource: 'addressbooks.list.delete',
-				data: {
-					accountId: self.accountId,
-					listId: listId,
-					generateError: false
-				},
-				success: function (data) {
-					if(typeof(callback) === 'function') {
-						callback(data.data);
-					}
-				}
-			});
 		},
 
 		entriesTableRender: function(entries, listId, $container, callback) {
@@ -760,7 +522,6 @@ define(function(require){
 			var reader = new FileReader();
 
 			reader.onload = function(e) {
-				console.log(e.target.result);
 				var entriesArr = self.parseEntriesCSV(e.target.result);
 
 				self.createEntries(entriesArr, listId, function(results) {
@@ -853,24 +614,6 @@ define(function(require){
 			});
 		},
 
-		deleteAllEntries: function(listId, callback) {
-			var self = this;
-
-			monster.request({
-				resource: 'addressbooks.list.deleteAllEntries',
-				data: {
-					accountId: self.accountId,
-					listId: listId,
-					generateError: false
-				},
-				success: function (data) {
-					if(typeof(callback) === 'function') {
-						callback(data.data);
-					}
-				}
-			});
-		},
-
 		showPopupCreateEntry: function(listId, callback){
 			var self = this;
 			var i18n = self.i18n.active();
@@ -882,7 +625,7 @@ define(function(require){
 
 			var $popup = monster.ui.dialog(dialogTemplate, {
 				title: i18n.rates.createEntryDialogTitle,
-				dialogClass: 'addressbooks-container addressbooks-dialog'
+				dialogClass: 'rates-container rates-dialog'
 			});
 
 			self.entryPopupBindEvents($popup, {}, null, listId);
@@ -900,7 +643,7 @@ define(function(require){
 
 				var $popup = monster.ui.dialog(dialogTemplate, {
 					title: i18n.rates.editEntryDialogTitle.replace('${name}', entryData.displayname),
-					dialogClass: 'addressbooks-container addressbooks-dialog'
+					dialogClass: 'rates-container rates-dialog'
 				});
 
 				if(entryData.number) {
@@ -1017,7 +760,6 @@ define(function(require){
 
 			if(entryId) {
 				newEntryData = self.removeEmptyEntryProperties($.extend(true, entryData, formData));
-				console.log(newEntryData);
 				self.updateEntry(entryId, listId, newEntryData, function(updatedEntryData){
 					self.updateEntryDatatableRow(entryId, updatedEntryData);
 					$popup.dialog('close');
